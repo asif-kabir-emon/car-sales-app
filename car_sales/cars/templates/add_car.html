@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+
+{% block title %}
+    Add Car 
+{% endblock %}
+
+{% block content %}
+{% load crispy_forms_tags %}
+<div class="my-5" style="width: 50%; margin: auto;" >
+    <h1>Add a Car</h1>
+    <form method="POST" class="mt-5">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary">Add Car</button>
+    </form>
+</div>
+{% endblock %}

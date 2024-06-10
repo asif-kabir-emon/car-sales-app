@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}
+    Home - Car Sales
+{% endblock %}
+
+{% block content %}
+<div class="container my-5 d-flex flex-column-reverse flex-lg-row d-wrap align-items-center justify-content-between gap-5">
+    <div class="col-lg-6">
+        <h1>Welcome to Car Sales Website</h1>
+        <p>
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Ducimus ipsum neque non voluptates. Deserunt facere, nam neque amet sint eaque ipsum consectetur! Nam itaque sunt voluptate. Dicta, ipsum. Possimus, explicabo nostrum non in doloremque hic qui dolores a similique ipsa modi ea quis sint ad eveniet placeat dolor repudiandae dolorum asperiores odio eligendi soluta maxime? Asperiores fuga architecto laudantium iure, illo impedit itaque natus aperiam unde sit libero fugiat ipsum ex quisquam, quam neque excepturi commodi dolorum eos id. Excepturi doloribus consequatur, ab expedita, distinctio tenetur porro exercitationem incidunt quo accusantium culpa sunt, non earum modi cum at esse ullam.
+        </p>
+    </div>
+    <div class="col-lg-6">
+        <div style="margin-left: auto;" class="d-flex justify-content-lg-end">
+            <img src="{% static 'car_sales_home.jpg' %}" alt="Blog"  width="70%">
+        </div>
+    </div>
+</div>
+
+
+<div class="container my-5 d-flex flex-column flex-md-row d-wrap justify-content-between gap-5 gap-md-1">
+    <div class="col-md-2 bg-white p-3 rounded">
+        <h5>All Brands</h5>
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="brand" id="{{brand.id}}">
+            <label class="form-check-label" for="{{brand.id}}">
+                <a class="text-decoration-none text-dark" href="{% url 'home' %}">All Brands</a>
+            </label>
+        </div>
+        {% for brand in brands %}
+        <div class="form-check">
+            <input class="form-check-input" type="radio" name="brand" id="{{brand.id}}">
+            <label class="form-check-label" for="{{brand.id}}">
+                <a class="text-decoration-none text-dark" href="{% url 'brand_wise_cars' brand.slug %}">{{brand.name}}</a>
+            </label>
+        </div>
+        {% endfor %}
+    </div>
+    <div class="col-md-10">
+        <h3 class="mt-1 mb-4 mx-3 px-4 py-2 bg-secondary bg-opacity-50 rounded">{{cars | length}} results found</h3>
+        <div class="row mx-auto">
+            {% for car in cars %}
+                <div class="col-md-4 mb-3 mb-sm-0">
+                    <div class="card">
+                        {% if car.image %}
+                            <img src="{{car.image.url}}" class="card-img-top" alt="{{car.name}}" style="height: 230px; object-fit: cover; border-bottom: 1px solid lightgray;">
+                        {% else %}
+                            <div class="d-flex align-items-center justify-content-center rounded-top" style="height: 230px; background-color: lightgray;">
+                                <p>No Image Found</p>
+                            </div>
+                        {% endif %}
+                        
+                        <div class="card-body">
+                            <h5 class="card-title" style="height: 40px; overflow: hidden;">
+                                {{car.name}}
+                            </h5>
+                            <p class="card-text" style="height: 120px; overflow: hidden;">{{car.description | truncatewords:30}}</p>
+                            <div class="d-grid gap-1">
+                                <a href="{% url 'car_details' car.id %}" class="text-decoration-none text-black">
+                                    <div class="d-grid gap-1">
+                                        <button class="btn btn-warning">View Details</button>
+                                    </div>
+                                </a>
+                                {% if user.is_authenticated %}
+                                    <a href="{% url 'place_order' car.id %}" class="text-decoration-none text-black">
+                                        <div class="d-grid gap-1">
+                                            <button class="btn btn-warning" {% if car.quantity == 0 %}disabled{% endif %}>Buy Now</button>
+                                        </div>
+                                    </a>   
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {% if not cars %}
+            <div class="mx-3 rounded bg-white d-flex align-items-center justify-content-center" style="height: 200px;">
+                <h3>No Cars Found</h3>
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
